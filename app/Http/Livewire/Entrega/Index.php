@@ -51,6 +51,11 @@ class Index extends Component
 
     public function buscarPorQr($payload)
     {
+        \Log::warning('buscarPorQr: payload recibido', [
+            'longitud' => strlen($payload),
+            'payload' => $payload,
+        ]);
+
         $datos = CarneQrParser::parse($payload);
 
         if (! $datos) {
