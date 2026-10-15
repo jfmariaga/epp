@@ -29,7 +29,7 @@
     </div>
 
     <script>
-        (function() {
+        window.addEventListener('load', function() {
             const wireId = '{{ $this->getId() }}';
             let qrScanner = null;
 
@@ -54,7 +54,7 @@
                     qrScanner = null;
                 }
             });
-        })();
+        });
     </script>
 
     @if ($search != null)
