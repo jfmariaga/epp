@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="mask/jquery.js"></script>
+    <script src="mask/jquery.mask.js"></script>
+</head>
+<body>
+
+    <input class="money" id="num_mask" onkeyup="limpiarNum()" type="text" step="0.01" />
+    <input type="text" id="num_limpio">
+
+    <script>
+        $(document).ready(function(){
+              $('.money').mask('000.000.000.000.000,00', {reverse: true});
+        });
+
+        function limpiarNum(){
+            let num_mask = document.getElementById("num_mask").value;
+            document.getElementById("num_limpio").value
+
+            for(var i = 0; i<=num_mask.length; i++){
+                num_mask = num_mask.replace(".","");
+                num_mask = num_mask.replace(",","");
+                // num_mask = num_mask.replace(" ","");
+            }
+            
+            num_mask = num_mask / 100
+            
+            console.log(num_mask);
+            document.getElementById("num_limpio").value = num_mask;
+        }
+    </script>
+</body>
+
+
+</html>
