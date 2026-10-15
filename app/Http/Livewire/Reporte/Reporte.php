@@ -10,7 +10,7 @@ class Reporte extends Component
 {
     public function render()
     {
-        $reportes = EntregaEpp::all();
+        $reportes = EntregaEpp::with(['empleado', 'epp'])->get();
         return view('livewire.reporte.reporte', compact('reportes'));
     }
 }
