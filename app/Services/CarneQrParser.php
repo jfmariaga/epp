@@ -32,10 +32,10 @@ class CarneQrParser
      */
     public static function parse(string $payload): ?array
     {
-        // El lector de cámara puede agregar un salto de línea/retorno de carro
-        // al final del valor decodificado; eso no forma parte de los 113
+        // El carné trae un espacio (y a veces salto de línea) sobrante al
+        // final del valor decodificado; eso no forma parte de los 113
         // caracteres fijos del payload, así que se recorta antes de validar.
-        $payload = rtrim($payload, "\r\n");
+        $payload = rtrim($payload);
 
         if (strlen($payload) !== self::LONGITUD_ESPERADA) {
             \Log::warning('CarneQrParser: longitud de payload inesperada', [
