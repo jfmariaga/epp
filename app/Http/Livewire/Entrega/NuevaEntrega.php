@@ -6,12 +6,12 @@ use App\Models\Empleado;
 use App\Models\EntregaEpp;
 use App\Models\Epp;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class NuevaEntrega extends Component
 {
     public $modelId,$idEmple,$nombreEmpleado,$cc,$epp_id,$motivo,$cargo,$responsable,$linea,$estado,$observacion;
-    protected $listeners=['getModelId'];
     protected $rules = [
         'nombreEmpleado' => 'required',
         'epp_id' => 'required',
@@ -26,6 +26,7 @@ class NuevaEntrega extends Component
         return view('livewire.entrega.nueva-entrega',compact('epp'));
     }
 
+    #[On('getModelId')]
     public function getModelId($modelId)
     {
         $this->modelId = $modelId;
@@ -54,9 +55,9 @@ class NuevaEntrega extends Component
             ];
 
             EntregaEpp::create($datos);
-            $this->emitTo('entrega.index', 'render');
+            $this->dispatch('render')->to('entrega.index');
             $this->reset();
-            $this->emit('usuario_ok');
+            $this->dispatch('usuario_ok');
     }
 
     public function resetear()

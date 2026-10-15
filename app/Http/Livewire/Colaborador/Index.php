@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Colaborador;
 
 use App\Models\Empleado;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,13 +13,12 @@ class Index extends Component
     protected $paginationTheme = "bootstrap";
     public $item,$action,$search;
 
-    protected $listeners=['render'];
-
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
+    #[On('render')]
     public function render()
     {
         $colaborador = Empleado::where(function ($query) {
@@ -37,10 +37,28 @@ class Index extends Component
         $this->item = $userId;
 
         if ($action == 'delete') {
-           $this->emit('delete_ok');
+           $this->dispatch('delete_ok');
         } else {
-            $this->emitTo('colaborador.editar-usuario','getModelId', $this->item);
+            $this->dispatch('getModelId', $this->item)->to('colaborador.editar-usuario');
         }
     }
-   
+
+    public function eliminar($userId)
+    {
+        $colaborador = Empleado::find($userId);
+
+        if (! $colaborador) {
+            return;
+        }
+
+        if (! $colaborador->puedeEliminarse()) {
+            $this->dispatch('delete_error', mensaje: 'No se puede eliminar: tiene entregas de EPP registradas. Puedes marcarlo como Inactivo en su lugar.');
+            return;
+        }
+
+        $colaborador->delete();
+        $this->dispatch('render')->to('colaborador.index');
+        $this->dispatch('delete_success');
+    }
+
 }

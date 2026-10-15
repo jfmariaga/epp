@@ -6,7 +6,7 @@
 
 ## Summary
 
-Migrar la app EPP (Laravel 9 / PHP ^8.0 / Livewire 2 / AdminLTE 3.8) a PHP 8.2 + Laravel 10,
+Migrar la app EPP (Laravel 9 / PHP ^8.0 / Livewire 2 / AdminLTE 3.8) a PHP 8.2 + Laravel 12,
 rediseñar la interfaz completa con un sistema de diseño nuevo mobile/touch-first, agregar el CRUD
 de usuarios del sistema (hoy inexistente), agregar identificación de colaborador por QR de carné
 y búsqueda manual por cédula en tablet (sin intentar RFID por NFC, incompatible por hardware),
@@ -21,10 +21,12 @@ independientes y commiteadas por separado, preservando los flujos de negocio ya 
 ^8.0.2 y debe actualizarse)
 
 **Primary Dependencies**:
-- Laravel 9 → **Laravel 10** (LTS, soporta PHP 8.1–8.3; salto más seguro desde Laravel 9 que ir
-  directo a Laravel 11, que exige PHP 8.2 exacto sin margen).
+- Laravel 9 → **Laravel 12** (`^12.69`) — corregido durante la implementación: Laravel 10/11 ya
+  están fuera de soporte de seguridad a la fecha real de ejecución (2026-10-15), y Laravel 13
+  exige PHP 8.3. Laravel 12.69+ es la única versión con parches de seguridad vigentes que sigue
+  soportando PHP 8.2. Ver research.md, sección "Laravel 10 vs 12 vs 13".
 - Livewire 2 → **Livewire 3** (Livewire 2 está sin mantenimiento activo y no es el objetivo
-  recomendado para Laravel 10+; el salto de versión de Livewire se hace en la misma fase que el
+  recomendado para Laravel 12; el salto de versión de Livewire se hace en la misma fase que el
   framework para no duplicar trabajo de adaptación de componentes).
 - AdminLTE 3.8 + Bootstrap 5 (jeroennoten/laravel-adminlte) → se **retira** como parte del
   rediseño visual completo; se sustituye por **Tailwind CSS** + componentes propios, manteniendo
@@ -88,7 +90,7 @@ No hay violaciones que requieran justificación en Complexity Tracking.
 ```text
 specs/001-modernizacion-epp/
 ├── plan.md              # Este archivo
-├── research.md          # Fase 0: decisiones técnicas (Laravel 10 vs 11, libs QR/firma, Tailwind vs Vite)
+├── research.md          # Fase 0: decisiones técnicas (Laravel 12, libs QR/firma, Tailwind vs Vite)
 ├── data-model.md         # Fase 1: entidades nuevas/modificadas (User.role, nada en Empleado/EntregaEpp)
 ├── quickstart.md          # Fase 1: cómo levantar y probar el entorno tras cada fase
 ├── contracts/              # Fase 1: rutas/acciones nuevas (usuarios, delete colaborador, qr scan)
@@ -143,7 +145,7 @@ versión de framework y de sistema de diseño.
 
 ## Fases de ejecución (resumen; detalle en tasks.md)
 
-1. **Fase A — Upgrade de plataforma**: PHP 8.2 + Laravel 10 + Livewire 3, resolviendo breaking
+1. **Fase A — Upgrade de plataforma**: PHP 8.2 + Laravel 12 + Livewire 3, resolviendo breaking
    changes de dependencias (`laravel/ui`, `laravel/sanctum`, `jeroennoten/laravel-adminlte` se
    retira aquí mismo o en Fase B). Checklist de humo sobre los flujos existentes antes de
    continuar.

@@ -24,19 +24,34 @@ class SignaturePadController extends Controller
     public function update(Request $request, $id)
     {
         $usuario = Empleado::find($id);
-        $folderPath = public_path('signatures/'); // create signatures folder in public directory
         $image_parts = explode(";base64,", $request->signed);
         $image_type_aux = explode("image/", $image_parts[0]);
         $image_type = $image_type_aux[1];
         $image_base64 = base64_decode($image_parts[1]);
-        $file = $folderPath . uniqid() . '.' . $image_type;
-        file_put_contents($file, $image_base64);
+        $filename = uniqid() . '.' . $image_type;
+        file_put_contents(public_path('signatures/' . $filename), $image_base64);
 
         $usuario->update([
-            $usuario->firma = $file,
-
+            'firma' => 'signatures/' . $filename,
         ]);
         return redirect()->route('empleado', $usuario)->with('info', 'El registro de la firma fue exitoso!');
+    }
+
+    /**
+     * Resuelve el valor guardado en la columna `firma` a una ruta de archivo
+     * válida en este entorno. Datos antiguos guardaron la ruta absoluta del
+     * servidor donde se firmó (p. ej. XAMPP), que no coincide con este
+     * entorno; se recupera por el nombre de archivo dentro de public/signatures.
+     */
+    private function resolveFirmaPath(?string $stored): ?string
+    {
+        if (! $stored) {
+            return null;
+        }
+
+        $local = public_path('signatures/' . basename($stored));
+
+        return file_exists($local) ? $local : $stored;
     }
 
     public function Addtopdf($id)
@@ -85,7 +100,7 @@ class SignaturePadController extends Controller
 
 
         $pdf->SetXY(18, 180);
-        $pdf->Image($entrega->empleado->firma, 13, 160, 43, 22);
+        $pdf->Image($this->resolveFirmaPath($entrega->empleado->firma), 13, 160, 43, 22);
 
 
         // Descarga el PDF en ves de guardarlo en un carpeta si lo quieres guardar cambiar D por F en el primer valor
@@ -138,7 +153,7 @@ class SignaturePadController extends Controller
         $pdf->SetXY(30, 42);
         $pdf->Write(0.1, $trabajador->area);
 
-        $pdf->Image($trabajador->firma, 25, 172, 39, 12);
+        $pdf->Image($this->resolveFirmaPath($trabajador->firma), 25, 172, 39, 12);
 
         $pdf->SetXY(100, 184);
         $pdf->Write(0.1, $trabajador->cc);
@@ -169,7 +184,7 @@ class SignaturePadController extends Controller
             $pdf->SetXY($f, $y);
             $pdf->Write(0.1, $item->motivo);
 
-            $pdf->Image($item->firma, 128, $r, 25, 4);
+            $pdf->Image($this->resolveFirmaPath($item->firma), 128, $r, 25, 4);
 
 
             if ($y > 140) {
@@ -203,7 +218,7 @@ class SignaturePadController extends Controller
                 $pdf->SetXY(30, 42);
                 $pdf->Write(0.1, $trabajador->area);
 
-                $pdf->Image($trabajador->firma, 25, 172, 39, 12);
+                $pdf->Image($this->resolveFirmaPath($trabajador->firma), 25, 172, 39, 12);
 
                 $pdf->SetXY(100, 184);
                 $pdf->Write(0.1, $trabajador->cc);

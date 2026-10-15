@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Inventario;
 
 use App\Models\Epp;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -12,13 +13,12 @@ class Index extends Component
     protected $paginationTheme = "bootstrap";
     public $item,$action,$search;
 
-    protected $listeners=['render'];
-
     public function updatingSearch()
     {
         $this->resetPage();
     }
 
+    #[On('render')]
     public function render()
     {
         $items = Epp::where(function ($query) {
@@ -34,9 +34,9 @@ class Index extends Component
         $this->item = $userId;
 
         if ($action == 'delete') {
-           $this->emit('delete_ok');
+           $this->dispatch('delete_ok');
         } else {
-            $this->emitTo('inventario.editar-item','getModelId', $this->item);
+            $this->dispatch('getModelId', $this->item)->to('inventario.editar-item');
         }
     }
 }

@@ -1,192 +1,108 @@
 <div>
     <div class="modal-header">
-        <h5 class="modal-title">Nuevo entrega</h5>
+        <h5 class="modal-title">Nueva entrega</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close" wire:click="resetear()">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
     <div class="modal-body">
         @if ($idEmple != null)
-            <div class="modal-body">
-                @if ($estado === 0)
-                    <div class="row">
-                        <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                            <label for="">Cedula</label>
-                            <input type="number" class="form-control  @error('cc') border_error @enderror"
-                                wire:model="cc" disabled>
-                            @error('cc')
-                                <span class="input_error error text-danger">{{ $message }}</span>
-                            @enderror
-                        </fieldset>
-                        <br>
-                        <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                            <label for="">Nombre</label>
-                            <input type="text" class="form-control  @error('nombreEmpleado') border_error @enderror"
-                                wire:model="nombreEmpleado" disabled>
-                            @error('nombreEmpleado')
-                                <span class="input_error error text-danger">{{ $message }}</span>
-                            @enderror
-                        </fieldset>
+            @if ($estado === 0)
+                <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-slate-700">Cédula</label>
+                        <input type="number" class="input-touch @error('cc') border-red-500 @enderror"
+                            wire:model="cc" disabled>
                     </div>
-                    <div class="row">
-                        <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                            <label for="">Labor</label>
-                            <input type="text" class="form-control  @error('cargo') border_error @enderror"
-                                wire:model="cargo" disabled>
-                            @error('cargo')
-                                <span class="input_error error text-danger">{{ $message }}</span>
-                            @enderror
-                        </fieldset>
-                        <br>
-                        <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                            <label for="">Motivo</label>
-                            <select wire:model.defer="motivo" class="form-control">
-                                <option value="" selected>Seleccionar...</option>
-                                <option value="NUEVO">NUEVO</option>
-                                <option value="PERDIDA">PERDIDA</option>
-                                <option value="REPOSICION">DAÑO</option>
-                                <option value="APROVECHAMIENTO">APROVECHAMIENTO</option>
-                            </select>
-                            @error('motivo')
-                                <span class="input_error error text-danger">{{ $message }}</span>
-                            @enderror
-                        </fieldset>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-slate-700">Nombre</label>
+                        <input type="text" class="input-touch @error('nombreEmpleado') border-red-500 @enderror"
+                            wire:model="nombreEmpleado" disabled>
                     </div>
-                    <div class="row">
-                        <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                            <label class="float-left"><b>Seleccionar EPP</b></label>
-                            <select wire:model.defer="epp_id" class="form-control ">
-                                <option value="" selected>Seleccionar...</option>
-                                @foreach ($epp as $item)
-                                    <option value="{{ $item->id }}"> {{ $item->descripcion }} </option>
-                                @endforeach
-                            </select>
-                            @error('epp_id')
-                                <span class="c_error2 error text-danger">{{ $message }}</span>
-                            @enderror
-                        </fieldset>
-                        <br>
-                        <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                            <label class="float-left"><b>Linea</b></label>
-                            <select wire:model.defer="linea" class="form-control">
-                                <option value="" selected>Seleccionar...</option>
-                                <option value="LINEA FLEXIBLES
-                                ">LINEA FLEXIBLES
-                                </option>
-                                <option value="LINEA SACHETS
-                                ">LINEA SACHETS
-                                </option>
-                                <option value="LINEA NECTAR
-                                ">LINEA NECTAR
-                                </option>
-                                <option value="LINEA CONSERVAS FRASCOS
-                                ">LINEA CONSERVAS
-                                    FRASCOS
-                                </option>
-                                <option value="LINEA ENLATADOS
-                                ">LINEA ENLATADOS
-                                </option>
-                                <option value="LINEA LIQUIDOS FRASCOS
-                                ">LINEA LIQUIDOS
-                                    FRASCOS
-                                </option>
-                                <option value="LINEA LIQUIDOS GALONES
-                                ">LINEA LIQUIDOS
-                                    GALONES
-                                </option>
-                                <option value="LINEA BOCADILLO-CERNIDO
-                                ">LINEA
-                                    BOCADILLO-CERNIDO
-                                </option>
-                                <option value="GRANELES
-                                ">GRANELES
-                                </option>
-                                <option value="LINEA GALONES PASTOSOS
-                                ">LINEA GALONES
-                                    PASTOSOS
-                                </option>
-                                <option value="EMPAQUES MANUALES
-                                ">EMPAQUES MANUALES
-                                </option>
-                                <option value="ENSAMBLES
-                                ">ENSAMBLES
-                                </option>
-                                <option value="ADMINISTRATIVA
-                                ">ADMINISTRATIVA
-                                </option>
-                                <option value="MANTENIMIENTO
-                                ">MANTENIMIENTO
-                                </option>
-                                <option value="AMBIENTAL
-                                ">AMBIENTAL
-                                </option>
-                                <option value="CEDI
-                                ">CEDI
-                                </option>
-                                <option value="CTRL PRODUCCION
-                                ">CTRL PRODUCCION
-                                </option>
-                                <option value="BPM
-                                ">BPM
-                                </option>
-                                <option value="SERVICIOS GENERALES
-                                ">SERVICIOS GENERALES
-                                </option>
-                                <option value="CALIDAD
-                                ">CALIDAD
-                                </option>
-                                <option value="MEJORA CONTINUA
-                                ">MEJORA CONTINUA
-                                </option>
-                                <option value="PROYECTOS
-                                ">PROYECTOS
-                                </option>
-                                <option value="GENTE Y CULTURA
-                                ">GENTE Y CULTURA
-                                </option>
-                                <option value="TECNOLOGIA
-                                ">TECNOLOGIA
-                                </option>
-                                <option value="MATERIAS PRIMAS
-                                ">MATERIAS PRIMAS
-                                </option>
-                            </select>
-                            @error('linea')
-                                <span class="c_error2 error text-danger">{{ $message }}</span>
-                            @enderror
-                        </fieldset>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-slate-700">Labor</label>
+                        <input type="text" class="input-touch @error('cargo') border-red-500 @enderror"
+                            wire:model="cargo" disabled>
                     </div>
-                    <div class="row">
-                        <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                            <label for="">Observación</label>
-                            <textarea cols="30" rows="5" wire:model="observacion"
-                                class=" @error('observacion') border_error @enderror form-control"></textarea>
-                            @error('observacion')
-                                <span class="input_error error text-danger">{{ $message }}</span>
-                            @enderror
-                        </fieldset>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-slate-700">Motivo</label>
+                        <select wire:model="motivo" class="select-touch @error('motivo') border-red-500 @enderror">
+                            <option value="" selected>Seleccionar...</option>
+                            <option value="NUEVO">NUEVO</option>
+                            <option value="PERDIDA">PERDIDA</option>
+                            <option value="REPOSICION">DAÑO</option>
+                            <option value="APROVECHAMIENTO">APROVECHAMIENTO</option>
+                        </select>
+                        @error('motivo')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
                     </div>
-                @else
-                    <h3>Este usuario esta <strong>INACTIVO</strong>😒</h3>
-                @endif
-            </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-slate-700">Seleccionar EPP</label>
+                        <select wire:model="epp_id" class="select-touch @error('epp_id') border-red-500 @enderror">
+                            <option value="" selected>Seleccionar...</option>
+                            @foreach ($epp as $item)
+                                <option value="{{ $item->id }}">{{ $item->descripcion }}</option>
+                            @endforeach
+                        </select>
+                        @error('epp_id')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div>
+                        <label class="mb-1 block text-sm font-medium text-slate-700">Línea</label>
+                        <select wire:model="linea" class="select-touch @error('linea') border-red-500 @enderror">
+                            <option value="" selected>Seleccionar...</option>
+                            <option value="LINEA FLEXIBLES">LINEA FLEXIBLES</option>
+                            <option value="LINEA SACHETS">LINEA SACHETS</option>
+                            <option value="LINEA NECTAR">LINEA NECTAR</option>
+                            <option value="LINEA CONSERVAS FRASCOS">LINEA CONSERVAS FRASCOS</option>
+                            <option value="LINEA ENLATADOS">LINEA ENLATADOS</option>
+                            <option value="LINEA LIQUIDOS FRASCOS">LINEA LIQUIDOS FRASCOS</option>
+                            <option value="LINEA LIQUIDOS GALONES">LINEA LIQUIDOS GALONES</option>
+                            <option value="LINEA BOCADILLO-CERNIDO">LINEA BOCADILLO-CERNIDO</option>
+                            <option value="GRANELES">GRANELES</option>
+                            <option value="LINEA GALONES PASTOSOS">LINEA GALONES PASTOSOS</option>
+                            <option value="EMPAQUES MANUALES">EMPAQUES MANUALES</option>
+                            <option value="ENSAMBLES">ENSAMBLES</option>
+                            <option value="ADMINISTRATIVA">ADMINISTRATIVA</option>
+                            <option value="MANTENIMIENTO">MANTENIMIENTO</option>
+                            <option value="AMBIENTAL">AMBIENTAL</option>
+                            <option value="CEDI">CEDI</option>
+                            <option value="CTRL PRODUCCION">CTRL PRODUCCION</option>
+                            <option value="BPM">BPM</option>
+                            <option value="SERVICIOS GENERALES">SERVICIOS GENERALES</option>
+                            <option value="CALIDAD">CALIDAD</option>
+                            <option value="MEJORA CONTINUA">MEJORA CONTINUA</option>
+                            <option value="PROYECTOS">PROYECTOS</option>
+                            <option value="GENTE Y CULTURA">GENTE Y CULTURA</option>
+                            <option value="TECNOLOGIA">TECNOLOGIA</option>
+                            <option value="MATERIAS PRIMAS">MATERIAS PRIMAS</option>
+                        </select>
+                        @error('linea')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                    <div class="md:col-span-2">
+                        <label class="mb-1 block text-sm font-medium text-slate-700">Observación</label>
+                        <textarea cols="30" rows="4" wire:model="observacion"
+                            class="input-touch !h-auto @error('observacion') border-red-500 @enderror"></textarea>
+                        @error('observacion')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+                </div>
+            @else
+                <p class="text-amber-700">Este usuario está <strong>INACTIVO</strong></p>
+            @endif
         @else
-            <div class="spinner-border text-primary" role="status">
-                <span class=" text-center"></span>
+            <div class="flex justify-center py-6">
+                <div class="spinner-border text-brand-600" role="status"></div>
             </div>
         @endif
-        <div class="modal-footer">
-            <input type="submit" class="btn btn-outline-primary btn-sm" wire:click="guardar()" value="Guardar">
-            <input type="reset" class="btn btn-outline-danger btn-sm" data-dismiss="modal" wire:click="resetear()"
-                value="Cancelar">
-        </div>
     </div>
-    {{-- <script>
-        document.addEventListener('livewire:load', function(){
-            $('.select2').select2();
-            $('.select2').on('change', function(){
-                @this.set('epp_id', this.value);
-            })
-         })
-    </script> --}}
+    <div class="modal-footer gap-2">
+        <button type="button" class="btn-primary" wire:click="guardar()">Guardar</button>
+        <button type="button" class="btn-secondary" data-dismiss="modal" wire:click="resetear()">Cancelar</button>
+    </div>
 </div>

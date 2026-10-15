@@ -1,122 +1,77 @@
-@extends('adminlte::page')
+@extends('layouts.tailwind')
 
-@section('title', 'Dashboard')
-
-@section('content_header')
-    <h1>Firma de Epp</h1>
-@stop
+@section('title', 'Firma de EPP')
+@section('content_header', 'Firma de EPP')
 
 @section('content')
-    <div class="card">
-        <div class="card-body">
-            <div class="container">
-                <div class="row">
-                    <div class="col-md-6 offset-md-3 mt-5">
-                        <div class="card">
-                            @foreach ($emple as $item)
-                                <div class="card-header">
-                                    <h5><b>Usuario:</b>{{ $item->nombre }}</h5>
-                                    <h5><b>Cedula:</b>{{ $item->cc }}</h5>
-                                </div>
-                                <div class="card-body">
-                                    @if (session('success'))
-                                        <div class="alert alert-success">
-                                            <span>{{ session('success') }}</span>
-                                        </div>
-                                    @endif
+    <div class="mx-auto max-w-xl">
+        @foreach ($emple as $item)
+            <div class="card-panel p-6">
+                <h2 class="text-lg font-semibold text-slate-800">{{ $item->nombre }}</h2>
+                <p class="mb-4 text-sm text-slate-500">Cédula: {{ $item->cc }}</p>
 
-                                    <form method="POST" action="{{ route('firma.update', $item->id) }}">
-                                        @method('PUT')
-                                        @csrf
-                                        <div class="col-md-12">
-                                            <br />
-                                            <div id="sig"></div>
-                                            <br /><br />
-                                            <textarea id="signature" name="signed" style="display: none"></textarea>
-                                        </div>
-                                        <div>
-                                            <p>Me comprometo a utilizar los elementos de protección personal, que me han
-                                                sido suministrados para el desempeño de mis funciones
-                                                y actividades dentro del área de trabajo.
-                                                He sido instruido sobre la manera correcta de su uso y mantenimiento;
-                                                igualmente me comprometo a mantenerlos en buen estado y
-                                                reportar cualquier anomalía al proceso de seguridad y salud en el trabajo o
-                                                mi jefe inmediato, para su reposición o evaluación de
-                                                efectividad frente al riesgo.
-                                            </p>
-                                        </div>
-                                        <button class="btn btn-primary btn-sm ml-3">Guardar</button>
-                                        <button id="clear" class="btn btn-warning btn-sm">Borrar</button>
-                                        <a href="{{ route('empleado') }}" class="btn btn-danger btn-sm">Cancelar</a>
-
-                                    </form>
-                                </div>
-                            @endforeach
-
-                        </div>
+                @if (session('success'))
+                    <div class="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800">
+                        {{ session('success') }}
                     </div>
-                </div>
+                @endif
+
+                <form method="POST" action="{{ route('firma.update', $item->id) }}">
+                    @method('PUT')
+                    @csrf
+                    <canvas id="sig-canvas"
+                        class="w-full rounded-lg border border-slate-300"
+                        style="height:200px; touch-action:none;"></canvas>
+                    <textarea id="signature" name="signed" style="display: none"></textarea>
+
+                    <p class="mt-4 text-sm text-slate-600">
+                        Me comprometo a utilizar los elementos de protección personal, que me han sido
+                        suministrados para el desempeño de mis funciones y actividades dentro del área de
+                        trabajo. He sido instruido sobre la manera correcta de su uso y mantenimiento;
+                        igualmente me comprometo a mantenerlos en buen estado y reportar cualquier anomalía al
+                        proceso de seguridad y salud en el trabajo o mi jefe inmediato, para su reposición o
+                        evaluación de efectividad frente al riesgo.
+                    </p>
+
+                    <div class="mt-4 flex flex-wrap gap-3">
+                        <button class="btn-primary">Guardar</button>
+                        <button type="button" id="clear" class="btn-secondary">Borrar</button>
+                        <a href="{{ route('empleado') }}" class="btn-danger">Cancelar</a>
+                    </div>
+                </form>
             </div>
-        </div>
+        @endforeach
     </div>
 @stop
 
-@section('css')
-    @livewireStyles
-    <link rel="stylesheet" href="{{ asset('firma/css/bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ asset('firma/css/jquery.signature.css') }}">
-@stop
-
 @section('js')
-    @livewireScripts
-    <script src="{{ asset('firma/js/alert.min.js') }}"></script>
-    <script src="{{ asset('firma/js/jquery-ui.min.js') }}"></script>
-    {{-- <script src="{{ asset('firma/js/jquery.min.js') }}"></script> --}}
-    <script src="{{ asset('firma/js/jquery.signature.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.1.7/dist/signature_pad.umd.min.js"></script>
     <script type="text/javascript">
-        var sig = $('#sig').signature({
-            syncField: '#signature',
-            syncFormat: 'PNG'
-        });
-        $('#clear').click(function(e) {
+        const sigCanvas = document.getElementById('sig-canvas');
+        const signaturePad = new SignaturePad(sigCanvas);
+
+        function resizeSigCanvas() {
+            const ratio = Math.max(window.devicePixelRatio || 1, 1);
+            sigCanvas.width = sigCanvas.offsetWidth * ratio;
+            sigCanvas.height = sigCanvas.offsetHeight * ratio;
+            sigCanvas.getContext('2d').scale(ratio, ratio);
+            signaturePad.clear();
+        }
+        window.addEventListener('resize', resizeSigCanvas);
+        resizeSigCanvas();
+
+        document.getElementById('clear').addEventListener('click', function(e) {
             e.preventDefault();
-            sig.signature('clear');
-            $("#signature64").val('');
+            signaturePad.clear();
         });
-    </script>
 
-    <script>
-        Livewire.on('usuario_ok', i => {
-            try {
-                $('#nuevaEntrega').modal('hide');
-
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'Entrega realizada con exito',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-            } catch (error) {
-                console.log('Error alert', error);
+        document.querySelector('#sig-canvas').closest('form').addEventListener('submit', function(e) {
+            if (signaturePad.isEmpty()) {
+                e.preventDefault();
+                alert('Por favor firme antes de guardar.');
+                return;
             }
-        })
-    </script>
-    <script>
-        Livewire.on('editar', i => {
-            try {
-                $('#editItem').modal('hide');
-
-                Swal.fire({
-                    position: 'top-end',
-                    icon: 'success',
-                    title: 'Item editado',
-                    showConfirmButton: false,
-                    timer: 1500
-                })
-            } catch (error) {
-                console.log('Error alert', error);
-            }
-        })
+            document.getElementById('signature').value = signaturePad.toDataURL('image/png');
+        });
     </script>
 @stop

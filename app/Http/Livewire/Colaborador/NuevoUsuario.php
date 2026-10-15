@@ -42,9 +42,9 @@ class NuevoUsuario extends Component
 
         Empleado::create($datos);
         // $user->save();
-        $this->emitTo('colaborador.index', 'render');
+        $this->dispatch('render')->to('colaborador.index');
         $this->reset();
-        $this->emit('usuario_ok');
+        $this->dispatch('usuario_ok');
     }
 
     public function resetear()

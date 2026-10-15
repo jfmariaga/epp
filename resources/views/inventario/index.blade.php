@@ -1,40 +1,22 @@
-@extends('adminlte::page')
+@extends('layouts.tailwind')
 
-@section('title', 'Dashboard')
-
-@section('content_header')
-    <h1>Inventario de Item´s</h1>
-@stop
+@section('title', 'Items de inventario')
+@section('content_header', 'Items de inventario')
 
 @section('content')
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-lg-12 ">
-                    <div class="float-right">
-                        <a href="#" class="btn btn-sm btn-outline-success" data-toggle="modal"
-                            data-target="#nuevoItem">Nueva Item</a>
-                    </div>
-                </div>
-                <br>
-                <br>
-                <div class="col-lg-12">
-                    @livewire('inventario.index')
-                </div>
-            </div>
+    <div class="card-panel p-4">
+        <div class="mb-4 flex justify-end">
+            <a href="#" class="btn-success" data-toggle="modal" data-target="#nuevoItem">
+                <i class="fas fa-plus"></i> Nuevo item
+            </a>
         </div>
+
+        @livewire('inventario.index')
     </div>
-@stop
-
-@section('css')
-    {{-- @livewireStyles --}}
-
 @stop
 
 @stack('modals')
 @section('js')
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    {{-- @livewireScripts --}}
     <script>
         Livewire.on('usuario_ok', i => {
             try {

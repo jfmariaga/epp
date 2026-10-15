@@ -1,24 +1,33 @@
 # Phase 0 Research: Modernización integral de la app EPP
 
-## Laravel 10 vs Laravel 11/12
+## Laravel 10 vs 12 vs 13 — CORREGIDO durante implementación (2026-10-15)
 
-**Decisión**: Laravel 10 (LTS).
+**Decisión final**: **Laravel 12** (`^12.69`), no Laravel 10 como se planteó originalmente.
 
-**Por qué**: Laravel 10 soporta PHP 8.1–8.3, dando margen frente al PHP 8.2 exacto que exige
-Laravel 11/12. El salto de Laravel 9→10 es menor (sin cambios de Livewire obligatorios más allá de
-la versión 3, sin reescritura de `Kernel.php`/bootstrap como en Laravel 11). Permite llegar a un
-estado estable rápido; subir a Laravel 11/12 queda como mejora futura opcional, no parte de esta
-iniciativa.
+**Por qué cambió**: al ejecutar `composer update` se descubrió que, a la fecha de hoy
+(2026-10-15), **Laravel 10 y 11 ya salieron de su ventana de soporte de seguridad** — el propio
+`composer audit`/resolver de Composer 2.9 bloqueó la instalación de *cualquier* versión 10.x
+(hasta la última, 10.50.3) por quedar afectada por varios CVE sin parche retroactivo. Laravel 13
+(la major actual) exige PHP `^8.3`, lo que rompería el requisito explícito del usuario de quedarse
+en PHP 8.2. **Laravel 12.69.0+ sí recibió los parches de seguridad relevantes y sigue soportando
+PHP `^8.2`** (confirmado con `composer why-not laravel/framework 12.70.0`, sin conflicto de PHP) —
+es la única opción que cumple ambos requisitos (seguridad vigente + PHP 8.2) al mismo tiempo.
 
-**Alternativa rechazada**: Laravel 11/12 directo — exige refactor adicional de `bootstrap/app.php`
-y `app/Http/Kernel.php` al nuevo esqueleto "slim", lo cual mezclaría dos tipos de riesgo (versión +
-estructura) en una app sin tests automatizados robustos.
+**Alternativa rechazada — Laravel 10**: fuera de soporte de seguridad a esta fecha.
+
+**Alternativa rechazada — Laravel 13**: requiere PHP 8.3, y el usuario pidió explícitamente
+quedarse en PHP 8.2.
+
+**Lección operativa**: antes de fijar una versión de framework en el plan, correr
+`composer why-not <paquete> <version>` y `composer audit` contra el entorno real en lugar de
+asumir la matriz de soporte "de memoria" — las ventanas de EOL de Laravel se mueven con el tiempo
+y este plan se escribió asumiendo una fecha de referencia distinta a la real.
 
 ## Livewire 2 → 3
 
-**Decisión**: migrar a Livewire 3 en la misma fase que Laravel 10.
+**Decisión**: migrar a Livewire 3 en la misma fase que Laravel 12.
 
-**Por qué**: Livewire 2 no recibe soporte activo; mezclar Livewire 2 con Laravel 10+ es una
+**Por qué**: Livewire 2 no recibe soporte activo; mezclar Livewire 2 con Laravel 12 es una
 combinación no recomendada por el propio proyecto Livewire. Los cambios de API relevantes para
 este proyecto son acotados: `emit`/`emitTo` → `dispatch`, sintaxis de componentes anidados y
 binding de eventos (`wire:click` sigue igual). Cada componente Livewire existente (`Colaborador`,
@@ -36,7 +45,7 @@ depender de los componentes de AdminLTE, que están pensados para mouse/teclado 
 descartada explícitamente por el usuario en favor del rediseño completo.
 
 **Build tool**: se evalúa mantener Laravel Mix (ya configurado en `webpack.mix.js`) vs migrar a
-Vite (estándar actual de Laravel). Recomendado migrar a Vite en la Fase B, ya que Laravel 10 lo
+Vite (estándar actual de Laravel). Recomendado migrar a Vite en la Fase B, ya que Laravel 12 lo
 soporta de forma nativa y el ecosistema de plugins Tailwind está mejor mantenido ahí; no es
 bloqueante y puede diferirse si el tiempo aprieta.
 

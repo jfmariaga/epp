@@ -1,119 +1,155 @@
 <div>
-    <div class="mb-2 col-lg-4" style="margin-left: -8px">
-        <input autocomplete="none" type="password" wire:model="search" class="form-control" placeholder="Clave del empleado">
+    <div class="mb-4 flex flex-col gap-3 md:flex-row md:items-end">
+        <div class="max-w-xs">
+            <label class="mb-1 block text-sm font-medium text-slate-700">Clave del empleado</label>
+            <input autocomplete="none" type="password" wire:model.live="search" class="input-touch"
+                placeholder="RFID o cédula">
+        </div>
+        <button type="button" class="btn-primary" id="btn-escanear-qr" data-toggle="modal"
+            data-target="#modalEscanearQr">
+            <i class="fas fa-camera"></i> Escanear carné QR
+        </button>
     </div>
-    @if ($search != null)
-        <div class="row">
-            <div class="col-lg-12">
-                <div class="float-left">
-                    @if ($firma == '')
-                        <div>
-                            <p><b>Por favor agregar una firma para {{ $nombre }}</b></p>
-                        </div>
-                        <a class="btn btn-md btn-outline-danger" href="{{ route('signpad.index', $item2) }}">Agregar
-                            firma</a>
-                    @else
-                        <a href="#" class="btn btn-md btn-outline-success"
-                            wire:click="selecItem({{ $idemple }},'nuevo')" data-toggle="modal"
-                            data-target="#nuevaEntrega">Nueva entrega</a>
-                    @endif
+
+    <div class="modal fade" id="modalEscanearQr" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Escanear carné</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div id="qr-reader" style="width: 100%;"></div>
+                    <p id="qr-reader-status" class="text-muted mt-2"></p>
                 </div>
             </div>
         </div>
+    </div>
+
+    <script>
+        (function() {
+            const wireId = '{{ $this->getId() }}';
+            let qrScanner = null;
+
+            $('#modalEscanearQr').on('shown.bs.modal', function() {
+                qrScanner = new Html5Qrcode('qr-reader');
+                qrScanner.start(
+                    { facingMode: 'environment' },
+                    { fps: 10, qrbox: 250 },
+                    (decodedText) => {
+                        Livewire.find(wireId).call('buscarPorQr', decodedText);
+                        $('#modalEscanearQr').modal('hide');
+                    },
+                    () => {}
+                ).catch((err) => {
+                    $('#qr-reader-status').text('No se pudo acceder a la cámara: ' + err);
+                });
+            });
+
+            $('#modalEscanearQr').on('hidden.bs.modal', function() {
+                if (qrScanner) {
+                    qrScanner.stop().catch(() => {});
+                    qrScanner = null;
+                }
+            });
+        })();
+    </script>
+
+    @if ($search != null)
+        <div class="mb-4">
+            @if ($firma == '')
+                <p class="mb-2 text-amber-700"><b>Por favor agregar una firma para {{ $nombre }}</b></p>
+                <a class="btn-danger" href="{{ route('signpad.index', $item2) }}">
+                    <i class="fas fa-signature"></i> Agregar firma
+                </a>
+            @else
+                <a href="#" class="btn-success" wire:click="selecItem({{ $idemple }},'nuevo')" data-toggle="modal"
+                    data-target="#nuevaEntrega">
+                    <i class="fas fa-plus"></i> Nueva entrega
+                </a>
+            @endif
+        </div>
+
         @if ($entrega->count())
-            <div class="row mt-2">
-                <div class="col-lg-12 ">
-                    <div class="float-left">
-                        @if ($firma != null)
-                            <a class="btn btn-md btn-outline-warning"
-                                href="{{ route('signpad.so-32', $idemple) }}">FO-SO-32</a>
-                        @endif
-                    </div>
-                </div>
-                <div class="col-lg-12">
-                    <div class="text-center">
-                        <h1>ULTIMAS ENTREGAS PARA {{ $nombre }}</h1>
-                    </div>
-                </div>
+            <div class="mb-4 flex items-center justify-between">
+                @if ($firma != null)
+                    <a class="btn-secondary" href="{{ route('signpad.so-32', $idemple) }}">
+                        <i class="fas fa-file-pdf"></i> FO-SO-32
+                    </a>
+                @else
+                    <span></span>
+                @endif
+                <h2 class="text-lg font-semibold text-slate-700">Últimas entregas para {{ $nombre }}</h2>
             </div>
-            <table class="table table-responsive table-striped table-hover table-bordered dataex-html5-export">
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Cedula</th>
-                        <th>Centro de costos</th>
-                        <th>Area</th>
-                        <th>EPP entregado</th>
-                        <th>Motivo</th>
-                        <th>Labor</th>
-                        <th>Linea</th>
-                        <th>Responsable</th>
-                        <th>Observación</th>
-                        <th>Fecha de entrega</th>
-                        <th colspan="2">Firmar entrega</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($entrega as $item)
+
+            <div class="overflow-x-auto rounded-lg border border-slate-200">
+                <table class="table-touch w-full">
+                    <thead>
                         <tr>
-                            <td>{{ $item->empleado->nombre }}</td>
-                            <td>{{ $item->empleado->cc }}</td>
-                            <td>{{ $item->empleado->centro }}</td>
-                            <td>{{ $item->empleado->area }}</td>
-                            <td>{{ $item->epp->item }}-{{ $item->epp->descripcion }}</td>
-                            <td>{{ $item->motivo }}</td>
-                            <td>{{ $item->empleado->cargo }}</td>
-                            @if ($item->linea != null)
-                                <td>{{ $item->linea }}</td>
-                            @else
-                                <td>No registra</td>
-                            @endif
-                            <td>{{ $item->responsable }}</td>
-                            <td>
-                                @if ($item->observacion != null)
-                                    {{ $item->observacion }}
-                                @endif
-                            </td>
-                            <td>{{ $item->fechaEntrega }}</td>
-                            @if ($item->firma == null)
-                            <td class="text-center">
-                                <a class="btn btn-sm btn-primary" target="_blank" href="{{ route('firma.index', $item->empleado_id) }}"><i
-                                        class="far fa-edit"></i></a>
-                            </td>
-                            @else
-                                <td><b>Epp Firmado</b></td>
-                            @endif
-                            
-                            {{-- @if ($item->epp->acta == 1)
-                                <td class="text-center">
-                                    <a class="btn btn-sm btn-primary" href="{{ route('signpad.Addtopdf', $item) }}"><i
-                                            class="far fa-edit"></i></a>
-                                </td>
-                            @endif --}}
+                            <th>Nombre</th>
+                            <th>Cédula</th>
+                            <th>Centro de costos</th>
+                            <th>Área</th>
+                            <th>EPP entregado</th>
+                            <th>Motivo</th>
+                            <th>Labor</th>
+                            <th>Línea</th>
+                            <th>Responsable</th>
+                            <th>Observación</th>
+                            <th>Fecha de entrega</th>
+                            <th>Firmar entrega</th>
                         </tr>
-                    @endforeach
-                </tbody>
-            </table>
-            <div class="card-footer">
+                    </thead>
+                    <tbody>
+                        @foreach ($entrega as $item)
+                            <tr>
+                                <td>{{ $item->empleado->nombre }}</td>
+                                <td>{{ $item->empleado->cc }}</td>
+                                <td>{{ $item->empleado->centro }}</td>
+                                <td>{{ $item->empleado->area }}</td>
+                                <td>{{ $item->epp->item }}-{{ $item->epp->descripcion }}</td>
+                                <td>{{ $item->motivo }}</td>
+                                <td>{{ $item->empleado->cargo }}</td>
+                                <td>{{ $item->linea ?? 'No registra' }}</td>
+                                <td>{{ $item->responsable }}</td>
+                                <td>{{ $item->observacion }}</td>
+                                <td>{{ $item->fechaEntrega }}</td>
+                                <td class="text-center">
+                                    @if ($item->firma == null)
+                                        <a class="btn-secondary" target="_blank"
+                                            href="{{ route('firma.index', $item->empleado_id) }}">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                    @else
+                                        <span class="badge-success">Firmado</span>
+                                    @endif
+                                </td>
+                            </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="mt-4">
                 {{ $entrega->links() }}
             </div>
         @else
-            <div class="card-body">
-
+            <div class="rounded-lg border border-dashed border-slate-300 p-6 text-center text-slate-500">
                 @if ($nombre == '')
-                    <h3>No existen coincidencias para la clave ingresada</h3>
+                    No existen coincidencias para la clave ingresada
                 @else
-                    <h3>No existen entregas para {{ $nombre }}</h3>
+                    No existen entregas para {{ $nombre }}
                 @endif
             </div>
         @endif
     @else
-        <div class="card-body">
-            <h3>Ingrese la clave del empleado</h3>
+        <div class="rounded-lg border border-dashed border-slate-300 p-6 text-center text-slate-500">
+            Ingrese la clave del empleado o escanee su carné
         </div>
     @endif
+
     @push('modals')
         @include('modals.nueva-entrega')
-        {{-- @include('modals.editar-usuario') --}}
     @endpush
 </div>

@@ -16,14 +16,14 @@ de usuario (US1–US4) cuando aplica.
 
 ---
 
-## Fase A: Upgrade de plataforma (PHP 8.2 + Laravel 10 + Livewire 3)
+## Fase A: Upgrade de plataforma (PHP 8.2 + Laravel 12 + Livewire 3)
 
 **Bloquea** todas las demás fases: el rediseño y las features nuevas se construyen sobre esta base.
 
 - [ ] T001 Confirmar versión real de PHP del entorno Laragon (`php -v` → ya es 8.2.30) y fijar
       `"php": "^8.2"` en `composer.json`
 - [ ] T002 Actualizar `composer.json`: `laravel/framework` a `^10.0`, `laravel/sanctum` a la versión
-      compatible con Laravel 10, `laravel/ui` y `livewire/livewire` a `^3.0`
+      compatible con Laravel 12, `laravel/ui` y `livewire/livewire` a `^3.0`
 - [ ] T003 Ejecutar `composer update` y resolver conflictos de versión uno por uno (no forzar con
       `--ignore-platform-reqs`)
 - [ ] T004 [P] Migrar sintaxis Livewire 2 → 3 en `app/Http/Livewire/Colaborador/*.php`
@@ -39,7 +39,7 @@ de usuario (US1–US4) cuando aplica.
       firmar con Wacom, generar PDF de acta — todo debe funcionar igual que antes del upgrade
 - [ ] T010 Commit de cierre de Fase A únicamente cuando T009 pase completo
 
-**Checkpoint**: la app corre en PHP 8.2 + Laravel 10 + Livewire 3 sin regresiones funcionales.
+**Checkpoint**: la app corre en PHP 8.2 + Laravel 12 + Livewire 3 sin regresiones funcionales.
 
 ---
 

@@ -1,54 +1,39 @@
-@extends('layouts.app')
+@extends('layouts.tailwind')
+
+@section('title', 'Restablecer contraseña')
 
 @section('content')
-<div class="container ">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="p-1 text-center">
-                    <img src="{{ asset('img/login.png') }}" alt="branding logo">
-                </div>
-
-                <div class="card-body">
-                    @if (session('status'))
-                        <div class="alert alert-success" role="alert">
-                            {{ session('status') }}
-                        </div>
-                    @endif
-                    <div class="text-center">
-                        <p>Confirma tu dirección de correo electrónico, para poder generar un link de cambio de contraseña (recuerda revisar tu carpeta de Spam algunas veces el email llega a ese buzon)</p>
-                              
-                    </div>
-
-                    <form method="POST" action="{{ route('password.email') }}">
-                        @csrf
-
-                        <div class="form-group row">
-
-                            <div class="col-md-12 text-center">
-                            
-
-                                <input id="email" type="email" placeholder="Escribe aqui tu correo electrónico" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
-
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
-
-                        <div class="form-group row mb-0 mt-4">
-                            <div class="col-md-6  ml-6">
-                                <button type="submit" class="btn btn-danger">
-                                    {{ __('Restablecer') }}
-                                </button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
+    <div class="flex min-h-screen items-center justify-center bg-slate-100 p-4">
+        <div class="card-panel w-full max-w-md p-6 md:p-8">
+            <div class="mb-6 text-center">
+                <img src="{{ asset('img/login.png') }}" alt="Entrega EPP" class="mx-auto mb-3 h-16">
             </div>
+
+            @if (session('status'))
+                <div class="mb-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-emerald-800">
+                    {{ session('status') }}
+                </div>
+            @endif
+
+            <p class="mb-4 text-center text-sm text-slate-600">
+                Confirma tu dirección de correo electrónico, para poder generar un link de cambio de contraseña
+                (recuerda revisar tu carpeta de Spam, algunas veces el email llega ahí).
+            </p>
+
+            <form method="POST" action="{{ route('password.email') }}" class="space-y-4">
+                @csrf
+
+                <div>
+                    <input id="email" type="email" placeholder="Escribe aquí tu correo electrónico"
+                        class="input-touch @error('email') border-red-500 @enderror" name="email"
+                        value="{{ old('email') }}" required autocomplete="email" autofocus>
+                    @error('email')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                    @enderror
+                </div>
+
+                <button type="submit" class="btn-primary w-full">Restablecer</button>
+            </form>
         </div>
     </div>
-</div>
 @endsection

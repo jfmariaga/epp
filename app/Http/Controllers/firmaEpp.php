@@ -17,18 +17,17 @@ class firmaEpp extends Controller
     public function update(Request $request, $id)
     {
         $entrega = EntregaEpp::where('empleado_id', $id)->get();
-        $folderPath = public_path('signatures/'); // create signatures folder in public directory
         $image_parts = explode(";base64,", $request->signed);
         $image_type_aux = explode("image/", $image_parts[0]);
         $image_type = $image_type_aux[1];
         $image_base64 = base64_decode($image_parts[1]);
-        $file = $folderPath . uniqid() . '.' . $image_type;
-        file_put_contents($file, $image_base64);
+        $filename = uniqid() . '.' . $image_type;
+        file_put_contents(public_path('signatures/' . $filename), $image_base64);
 
         foreach ($entrega as $item) {
             if ($item->firma == null) {
                 $epp = $item;
-                $epp->firma = $file;
+                $epp->firma = 'signatures/' . $filename;
                 $epp->update();
             }
         }

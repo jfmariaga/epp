@@ -35,16 +35,22 @@ Route::get('error', function(){
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+Route::middleware('auth')->group(function () {
+    Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::view('Empleado', 'colaborador.index')->name('empleado');
-Route::view('Inventario', 'inventario.index')->name('inventario');
-Route::view('Entrega', 'entrega.index')->name('entrega');
-Route::view('Reporte', 'reporte.index')->name('reportes');
+    Route::view('Empleado', 'colaborador.index')->name('empleado');
+    Route::view('Inventario', 'inventario.index')->name('inventario');
+    Route::view('Entrega', 'entrega.index')->name('entrega');
+    Route::view('Reporte', 'reporte.index')->name('reportes');
 
-Route::get('signature-pad/{id}', [SignaturePadController::class, 'index'])->name('signpad.index');
-Route::put('signature-pad/{id}', [SignaturePadController::class, 'update'])->name('signpad.update');
-Route::get('firma/{id}', [firmaEpp::class, 'index'])->name('firma.index');
-Route::put('firma/{id}', [firmaEpp::class, 'update'])->name('firma.update');
-Route::get('/generatePDF/{id}', [SignaturePadController::class, 'Addtopdf'])->name('signpad.Addtopdf');
-Route::get('/generateFS32/{id}', [SignaturePadController::class, 'foso32'])->name('signpad.so-32'); 
+    Route::get('signature-pad/{id}', [SignaturePadController::class, 'index'])->name('signpad.index');
+    Route::put('signature-pad/{id}', [SignaturePadController::class, 'update'])->name('signpad.update');
+    Route::get('firma/{id}', [firmaEpp::class, 'index'])->name('firma.index');
+    Route::put('firma/{id}', [firmaEpp::class, 'update'])->name('firma.update');
+    Route::get('/generatePDF/{id}', [SignaturePadController::class, 'Addtopdf'])->name('signpad.Addtopdf');
+    Route::get('/generateFS32/{id}', [SignaturePadController::class, 'foso32'])->name('signpad.so-32');
+
+    Route::middleware('admin')->group(function () {
+        Route::view('Usuario', 'usuario.index')->name('usuario');
+    });
+});

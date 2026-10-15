@@ -5,47 +5,43 @@
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body space-y-4">
         @if ($modelId)
-            <div class="row">
-                <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                    <label for="">Codigo Item</label>
-                    <input type="text" class="form-control  @error('codigo') border_error @enderror" placeholder="Codigo"
-                        wire:model="codigo">
-                    @error('codigo')
-                        <span class="input_error error text-danger">{{ $message }}</span>
-                    @enderror
-                </fieldset>
-                <br>
-                <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                    <label>Descripción</label>
-                    <input type="text" class="form-control  @error('descripcion') border_error @enderror"
-                        placeholder="Descricrión" wire:model="descripcion">
-                    @error('descripcion')
-                        <span class="input_error error text-danger">{{ $message }}</span>
-                    @enderror
-                </fieldset>
-                <br>
-                <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                    <label>Requiere Acta de entrega</label>
-                    <select wire:model.defer="acta" class="form-control">
-                        <option value="" selected>Seleccionar...</option>
-                        <option value="1">SI</option>
-                        <option value="2">NO</option>
-                    </select>
-                    @error('acta')
-                        <span class="input_error error text-danger">{{ $message }}</span>
-                    @enderror
-                </fieldset>  
+            <div>
+                <label class="mb-1 block text-sm font-medium text-slate-700">Código Item</label>
+                <input type="text" class="input-touch @error('codigo') border-red-500 @enderror"
+                    placeholder="Código" wire:model="codigo">
+                @error('codigo')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+            <div>
+                <label class="mb-1 block text-sm font-medium text-slate-700">Descripción</label>
+                <input type="text" class="input-touch @error('descripcion') border-red-500 @enderror"
+                    placeholder="Descripción" wire:model="descripcion">
+                @error('descripcion')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
+            </div>
+            <div>
+                <label class="mb-1 block text-sm font-medium text-slate-700">Requiere acta de entrega</label>
+                <select wire:model="acta" class="select-touch">
+                    <option value="" selected>Seleccionar...</option>
+                    <option value="1">SI</option>
+                    <option value="2">NO</option>
+                </select>
+                @error('acta')
+                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                @enderror
             </div>
         @else
-            <div class="spinner-border text-primary text-center" style="align-items: center" role="status">
+            <div class="flex justify-center py-6">
+                <div class="spinner-border text-brand-600" role="status"></div>
             </div>
         @endif
     </div>
-    <div class="modal-footer">
-        <input type="submit" class="btn btn-outline-primary btn-sm" wire:click="update()" value="Actualizar">
-        <input type="reset" class="btn btn-outline-danger btn-sm" data-dismiss="modal" wire:click="resetear()"
-            value="Cancelar">
+    <div class="modal-footer gap-2">
+        <button type="button" class="btn-primary" wire:click="update()">Actualizar</button>
+        <button type="button" class="btn-secondary" data-dismiss="modal" wire:click="resetear()">Cancelar</button>
     </div>
 </div>

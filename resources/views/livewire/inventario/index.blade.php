@@ -1,43 +1,47 @@
 <div>
-    <div class="mb-2 col-lg-4" style="margin-left: -8px">
-        <input autocomplete="none" type="text" wire:model="search" class="form-control" placeholder="Buscar...">
+    <div class="mb-4">
+        <input autocomplete="none" type="text" wire:model.live="search" class="input-touch max-w-md"
+            placeholder="Buscar...">
     </div>
 
     @if ($items->count())
-        <table class="table table-striped table-hover table-bordered dataex-html5-export">
-            <thead>
-                <tr>
-                    <th>Item</th>
-                    <th>Descripción</th>
-                    <th>Requiere acta de entrega</th>
-                    <th colspan="2">Acción</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($items as $epp)
+        <div class="overflow-x-auto rounded-lg border border-slate-200">
+            <table class="table-touch w-full">
+                <thead>
                     <tr>
-                        <td>{{ $epp->item }}</td>
-                        <td>{{ $epp->descripcion }}</td>
-                        @if ($epp->acta == 1)
-                            <td>SI</td>
-                        @else
-                            <td>NO</td>
-                        @endif
-                        <td class="text-center">
-                            <a href="#" class="btn btn-sm btn-warning"
-                                wire:click="selecItem({{ $epp->id }},'update')" data-toggle="modal"
-                                data-target="#editItem"><i class="far fa-edit"></i></a>
-                        </td>
+                        <th>Item</th>
+                        <th>Descripción</th>
+                        <th>Requiere acta de entrega</th>
+                        <th>Acción</th>
                     </tr>
-                @endforeach
-            </tbody>
-        </table>
-        <div class="card-footer">
+                </thead>
+                <tbody>
+                    @foreach ($items as $epp)
+                        <tr>
+                            <td>{{ $epp->item }}</td>
+                            <td>{{ $epp->descripcion }}</td>
+                            <td>
+                                @if ($epp->acta == 1)
+                                    <span class="badge-success">SI</span>
+                                @else
+                                    <span class="badge-neutral">NO</span>
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                <a href="#" class="btn-secondary" wire:click="selecItem({{ $epp->id }},'update')"
+                                    data-toggle="modal" data-target="#editItem"><i class="far fa-edit"></i></a>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        <div class="mt-4">
             {{ $items->links() }}
         </div>
     @else
-        <div class="card-body">
-            <strong>No existen registros para mostrar</strong>
+        <div class="rounded-lg border border-dashed border-slate-300 p-6 text-center text-slate-500">
+            No existen registros para mostrar
         </div>
     @endif
 

@@ -1,95 +1,84 @@
 <div>
     <div class="modal-body">
         @if ($modelId)
-            <div class="row">
-                <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                    <label for="">Nombre</label>
-                    <input type="text" class="form-control  @error('nombre') border_error @enderror"
+            <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-slate-700">Nombre</label>
+                    <input type="text" class="input-touch @error('nombre') border-red-500 @enderror"
                         placeholder="Nombre" wire:model="nombre">
                     @error('nombre')
-                        <span class="input_error error text-danger">{{ $message }}</span>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                </fieldset>
-                <br>
-                <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                    <label>Cargo</label>
-                    <input type="text" class="form-control  @error('cargo') border_error @enderror"
+                </div>
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-slate-700">Cargo</label>
+                    <input type="text" class="input-touch @error('cargo') border-red-500 @enderror"
                         placeholder="Cargo" wire:model="cargo">
                     @error('cargo')
-                        <span class="input_error error text-danger">{{ $message }}</span>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                </fieldset>
-                <br>
-                <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                    <label>Area</label>
-                    <input type="text" class="form-control  @error('area') border_error @enderror" placeholder="Area"
-                        wire:model="area">
+                </div>
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-slate-700">Área</label>
+                    <input type="text" class="input-touch @error('area') border-red-500 @enderror"
+                        placeholder="Área" wire:model="area">
                     @error('area')
-                        <span class="input_error error text-danger">{{ $message }}</span>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                </fieldset>
-                <br>
-                <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                    <label>Centro de costos</label>
-                    <input type="number" class="form-control @error('centro') border_error @enderror"
+                </div>
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-slate-700">Centro de costos</label>
+                    <input type="number" class="input-touch @error('centro') border-red-500 @enderror"
                         placeholder="Centro de costos" wire:model="centro">
                     @error('centro')
-                        <span class="input_error error text-danger">{{ $message }}</span>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                </fieldset>
-                <br>
-                <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                    <label>Cedula</label>
-                    <input type="number" class="form-control @error('cc') border_error @enderror" placeholder="Cedula"
-                        wire:model="cc">
+                </div>
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-slate-700">Cédula</label>
+                    <input type="number" class="input-touch @error('cc') border-red-500 @enderror"
+                        placeholder="Cédula" wire:model="cc">
                     @error('cc')
-                        <span class="input_error error text-danger">{{ $message }}</span>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                </fieldset>
-                <br>
-                <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                    <label>Numero de tarjeta</label>
-                    <input type="password" class="form-control @error('password') border_error @enderror"
-                        placeholder="Numero de tarjeta" wire:model="password">
+                </div>
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-slate-700">Número de tarjeta</label>
+                    <input type="password" class="input-touch @error('password') border-red-500 @enderror"
+                        placeholder="Número de tarjeta" wire:model="password">
                     @error('password')
-                        <span class="input_error error text-danger">{{ $message }}</span>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                </fieldset>
-                <br>
-                <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                    <label>Tipo de contrato</label>
-                    <select wire:model.defer="contrato" @error('contrato') border_error @enderror class="form-control">
+                </div>
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-slate-700">Tipo de contrato</label>
+                    <select wire:model="contrato" class="select-touch @error('contrato') border-red-500 @enderror">
                         <option selected>Seleccionar...</option>
-                        <option value="Vinculado"> Vinculado </option>
-                        <option value="Ahora"> Ahora </option>
-                        <option value="Manpower"> ManpowerGroup </option>
+                        <option value="Vinculado">Vinculado</option>
+                        <option value="Ahora">Ahora</option>
+                        <option value="Manpower">ManpowerGroup</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="mb-1 block text-sm font-medium text-slate-700">Estado</label>
+                    <select wire:model="estado" class="select-touch @error('estado') border-red-500 @enderror">
+                        <option selected>Seleccionar...</option>
+                        <option value="0">Activo</option>
+                        <option value="1">Inactivo</option>
                     </select>
                     @error('estado')
-                        <span class="input_error error text-danger">{{ $message }}</span>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
-                </fieldset>
-                <br>
-                <fieldset class="form-group floating-label-form-group col-lg-6 col-12">
-                    <label>Estado</label>
-                    <select wire:model.defer="estado" @error('estado') border_error @enderror class="form-control">
-                        <option selected>Seleccionar...</option>
-                        <option value="0"> Activo </option>
-                        <option value="1"> Inactivo </option>
-                    </select>
-                    @error('estado')
-                        <span class="input_error error text-danger">{{ $message }}</span>
-                    @enderror
-                </fieldset>
+                </div>
             </div>
         @else
-            <div class="spinner-border text-primary" role="status">
-                <span class=" text-center"></span>
+            <div class="flex justify-center py-6">
+                <div class="spinner-border text-brand-600" role="status"></div>
             </div>
         @endif
     </div>
-    <div class="modal-footer">
-        <input type="submit" class="btn btn-outline-primary btn-sm" wire:click="update()" value="Guardar">
-        <input type="reset" class="btn btn-outline-danger btn-sm" data-dismiss="modal" wire:click="resetear()"
-            value="Cancelar">
+    <div class="modal-footer gap-2">
+        <button type="button" class="btn-primary" wire:click="update()">Guardar</button>
+        <button type="button" class="btn-secondary" data-dismiss="modal" wire:click="resetear()">Cancelar</button>
     </div>
 </div>

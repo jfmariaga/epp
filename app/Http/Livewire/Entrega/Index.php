@@ -4,6 +4,8 @@ namespace App\Http\Livewire\Entrega;
 
 use App\Models\Empleado;
 use App\Models\EntregaEpp;
+use App\Services\CarneQrParser;
+use Livewire\Attributes\On;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -13,12 +15,12 @@ class Index extends Component
     protected $paginationTheme = "bootstrap";
     public $item,$idNew, $action, $search,$idemple="",$firma="1",$item2,$nombre="";
 
-    protected $listeners = ['render'];
-
     public function updatingSearch()
     {
         $this->resetPage();
     }
+
+    #[On('render')]
     public function render()
     {
         if ($this->search === "") {
@@ -47,14 +49,35 @@ class Index extends Component
         return view('livewire.entrega.index', compact('entrega','empleado'));
     }
 
+    public function buscarPorQr($payload)
+    {
+        $datos = CarneQrParser::parse($payload);
+
+        if (! $datos) {
+            $this->dispatch('qr_invalido');
+            return;
+        }
+
+        $cedula = ltrim($datos['cedula'], '0') ?: '0';
+
+        $existe = Empleado::where('cc', $cedula)->Where('estado', 0)->exists();
+
+        if (! $existe) {
+            $this->dispatch('qr_sin_match', cedula: $cedula);
+            return;
+        }
+
+        $this->search = $cedula;
+    }
+
     public function selecItem($userId, $action)
     {
         $this->idNew = $userId;
 
         if ($action == 'delete') {
-           $this->emit('delete_ok');
+           $this->dispatch('delete_ok');
         } else {
-            $this->emitTo('entrega.nueva-entrega','getModelId', $this->idNew);
+            $this->dispatch('getModelId', $this->idNew)->to('entrega.nueva-entrega');
         }
     }
 }

@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('epps', function (Blueprint $table) {
             $table->id();
             $table->string('item')->unique();
-            $table->text('descripcion')->unique();
+            $table->string('descripcion')->unique();
             $table->timestamps();
         });
     }

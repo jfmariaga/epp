@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Colaborador;
 
 use App\Models\Empleado;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class EditarUsuario extends Component
@@ -18,12 +19,12 @@ class EditarUsuario extends Component
         'contrato' => 'required',
         'centro' => 'required'
     ];
-    protected $listeners = ['getModelId'];
     public function render()
     {
         return view('livewire.colaborador.editar-usuario');
     }
 
+    #[On('getModelId')]
     public function getModelId($modelId)
     {
         $this->modelId = $modelId;
@@ -54,8 +55,8 @@ class EditarUsuario extends Component
         $user->tp_contrato = $this->contrato;
         $user->update();
 
-        $this->emitTo('colaborador.index', 'render');
-        $this->emit('editar_user');
+        $this->dispatch('render')->to('colaborador.index');
+        $this->dispatch('editar_user');
         $this->reset();
     }
 

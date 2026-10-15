@@ -3,6 +3,7 @@
 namespace App\Http\Livewire\Inventario;
 
 use App\Models\Epp;
+use Livewire\Attributes\On;
 use Livewire\Component;
 
 class EditarItem extends Component
@@ -14,14 +15,12 @@ class EditarItem extends Component
         'acta'=> 'required'
     ];
 
-    protected $listeners=['getModelId'];
-
-
     public function render()
     {
         return view('livewire.inventario.editar-item');
     }
 
+    #[On('getModelId')]
     public function getModelId($modelId)
     {
         $this->modelId = $modelId;
@@ -44,9 +43,9 @@ class EditarItem extends Component
 
         $epp->update();
 
-        $this->emitTo('inventario.index', 'render');
+        $this->dispatch('render')->to('inventario.index');
         $this->reset();
-        $this->emit('editar');
+        $this->dispatch('editar');
     }
 
     public function resetear()

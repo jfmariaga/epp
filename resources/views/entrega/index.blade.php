@@ -1,44 +1,33 @@
-@extends('adminlte::page')
+@extends('layouts.tailwind')
 
-@section('title', 'Dashboard')
-
-@section('content_header')
-    <h1>Entrega de EPP</h1>
-@stop
+@section('title', 'Entrega de EPP')
+@section('content_header', 'Entrega de EPP')
 
 @section('content')
-    @if (session('info'))
-        <div class="alert alert-success">
-            <strong>{{ session('info') }}</strong>
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-lg-12">
-                    @livewire('entrega.index')
-                </div>
-            </div>
-        </div>
+    <div class="card-panel p-4">
+        @livewire('entrega.index')
     </div>
-@stop
-
-@section('css')
-    {{-- <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" /> --}}
-
-    {{-- @livewireStyles --}}
-
 @stop
 
 @stack('modals')
 @section('js')
-    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    {{-- <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script> --}}
-    {{-- @livewireScripts --}}
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script>
+        Livewire.on('qr_invalido', () => {
+            Swal.fire({
+                icon: 'error',
+                title: 'QR no reconocido',
+                text: 'El carné escaneado no coincide con el formato esperado. Intenta de nuevo o busca manualmente por cédula.',
+            })
+        })
+        Livewire.on('qr_sin_match', (e) => {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Colaborador no encontrado',
+                text: 'No existe un colaborador activo con cédula ' + e.cedula + '. Verifica el dato o búscalo manualmente.',
+            })
+        })
+    </script>
     <script>
         Livewire.on('usuario_ok', i => {
             try {

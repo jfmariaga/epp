@@ -29,9 +29,9 @@ class NuevoItem extends Component
             ];
 
             Epp::create($datos);
-            $this->emitTo('inventario.index', 'render');
+            $this->dispatch('render')->to('inventario.index');
             $this->reset();
-            $this->emit('usuario_ok');
+            $this->dispatch('usuario_ok');
     }
 
     public function resetear()

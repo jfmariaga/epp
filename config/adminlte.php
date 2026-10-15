@@ -255,6 +255,12 @@ return [
                     'route'  => 'inventario',
                     'icon_color' => 'warning',
                 ],
+                [
+                    'text' => 'Usuarios del sistema',
+                    'route'  => 'usuario',
+                    'icon_color' => 'purple',
+                    'can' => 'manage-users',
+                ],
             ],
         ],
 
