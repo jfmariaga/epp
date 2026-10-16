@@ -42,6 +42,7 @@ Route::middleware('auth')->group(function () {
     Route::view('Inventario', 'inventario.index')->name('inventario');
     Route::view('Entrega', 'entrega.index')->name('entrega');
     Route::view('Reporte', 'reporte.index')->name('reportes');
+    Route::get('Reporte/exportar', [App\Http\Controllers\ReporteExportController::class, 'export'])->name('reportes.export');
 
     Route::get('signature-pad/{id}', [SignaturePadController::class, 'index'])->name('signpad.index');
     Route::put('signature-pad/{id}', [SignaturePadController::class, 'update'])->name('signpad.update');
