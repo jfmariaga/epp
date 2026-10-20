@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Empleado extends Model
 {
-    protected $fillable = ['rfid','nombre','centro','cargo','cc','area','estado','tp_contrato'];
+    protected $fillable = ['rfid','nombre','centro','cargo','cc','area','estado','tp_contrato','firma'];
 
     use HasFactory;
 

@@ -12,7 +12,8 @@
                         <th>Item</th>
                         <th>Descripción</th>
                         <th>Requiere acta de entrega</th>
-                        <th>Acción</th>
+                        <th>Editar</th>
+                        <th>Eliminar</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -30,6 +31,22 @@
                             <td class="text-center">
                                 <a href="#" class="btn-secondary" wire:click="selecItem({{ $epp->id }},'update')"
                                     data-toggle="modal" data-target="#editItem"><i class="far fa-edit"></i></a>
+                            </td>
+                            <td class="text-center">
+                                <a href="#" class="btn-danger"
+                                    @click.prevent="Swal.fire({
+                                        title: '¿Eliminar {{ $epp->item }}?',
+                                        text: 'Esta acción no se puede deshacer.',
+                                        icon: 'warning',
+                                        showCancelButton: true,
+                                        confirmButtonText: 'Sí, eliminar',
+                                        cancelButtonText: 'Cancelar',
+                                        confirmButtonColor: '#dc2626',
+                                    }).then((result) => {
+                                        if (result.isConfirmed) {
+                                            $wire.eliminar({{ $epp->id }})
+                                        }
+                                    })"><i class="far fa-trash-alt"></i></a>
                             </td>
                         </tr>
                     @endforeach

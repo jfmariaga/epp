@@ -39,12 +39,15 @@
                     </div>
                     <div>
                         <label class="mb-1 block text-sm font-medium text-slate-700">Seleccionar EPP</label>
-                        <select wire:model="epp_id" class="select-touch @error('epp_id') border-red-500 @enderror">
-                            <option value="" selected>Seleccionar...</option>
-                            @foreach ($epp as $item)
-                                <option value="{{ $item->id }}">{{ $item->descripcion }}</option>
-                            @endforeach
-                        </select>
+                        <div wire:ignore>
+                            <select id="epp_id" wire:model="epp_id"
+                                class="select-touch @error('epp_id') border-red-500 @enderror">
+                                <option value="" selected>Seleccionar...</option>
+                                @foreach ($epp as $item)
+                                    <option value="{{ $item->id }}">{{ $item->descripcion }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                         @error('epp_id')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror

@@ -15,4 +15,9 @@ class Epp extends Model
     public function entregasEpps (){
         return $this->hasMany(EntregaEpp::class);
     }
+
+    public function puedeEliminarse(): bool
+    {
+        return ! $this->entregasEpps()->exists();
+    }
 }

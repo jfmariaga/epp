@@ -39,4 +39,22 @@ class Index extends Component
             $this->dispatch('getModelId', $this->item)->to('inventario.editar-item');
         }
     }
+
+    public function eliminar($itemId)
+    {
+        $epp = Epp::find($itemId);
+
+        if (! $epp) {
+            return;
+        }
+
+        if (! $epp->puedeEliminarse()) {
+            $this->dispatch('delete_error', mensaje: 'No se puede eliminar: tiene entregas de EPP registradas.');
+            return;
+        }
+
+        $epp->delete();
+        $this->dispatch('render')->to('inventario.index');
+        $this->dispatch('delete_success');
+    }
 }

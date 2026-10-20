@@ -50,5 +50,21 @@
                 console.log('Error alert', error);
             }
         })
+        Livewire.on('delete_success', () => {
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'Item eliminado',
+                showConfirmButton: false,
+                timer: 1500
+            })
+        })
+        Livewire.on('delete_error', (e) => {
+            Swal.fire({
+                icon: 'error',
+                title: 'No se puede eliminar',
+                text: e.mensaje,
+            })
+        })
     </script>
 @stop
